@@ -1,0 +1,110 @@
+models:
+  Customer:
+    name: string:255
+    email: unique email nullable
+    phone: string:20 nullable
+    address: text nullable
+    company: string:255 nullable
+    notes: text nullable
+    timestamps: true
+    softDeletes: true
+    relationships:
+      hasMany: Contact, Proposal
+
+  Contact:
+    user_id: id
+    customer_id: id
+    type: enum:email,phone,meeting,message
+    contact_date: datetime
+    notes: text nullable
+    timestamps: true
+    softDeletes: true
+    relationships:
+      belongsTo: Customer, User
+
+  Lead:
+    customer_id: id
+    title: string:255
+    description: text nullable
+    source: enum:website,email,phone,social_media
+    status: enum:new,contacted,qualified,closed,won,lost
+    timestamps: true
+    softDeletes: true
+    relationships:
+     belongsTo: Customer, User
+
+  Product:
+    title: string:255
+    description: text nullable
+    custom_fields: json nullable
+    timestamps: true
+    softDeletes: true
+
+  Proposal:
+    product_id: id
+    customer_id: id
+    user_id: id
+    title: string:255
+    description: text nullable
+    amount: decimal:15,2 nullable
+    status: enum:open,closed,won,lost
+    expected_close_date: date nullable
+    timestamps: true
+    softDeletes: true
+    relationships:
+      belongsTo: Product, Customer, User
+
+  Task:
+    customer_id: id
+    user_id: id
+    title: string:255
+    description: text nullable
+    due_date: date nullable
+    status: enum:pending,in_progress,completed,canceled
+    timestamps: true
+    softDeletes: true
+    relationships:
+      belongsTo: User, Customer
+
+  Event:
+    title: string:255
+    description: text nullable
+    event_date: datetime
+    customer_id: id
+    user_id: id
+    status: enum:scheduled,completed,canceled
+    location: string:255
+    timestamps: true
+    softDeletes: true
+    relationships:
+      belongsTo: User, Customer
+
+  Report:
+    title: string:255
+    generated_by: foreignId:user_id
+    report_type: enum:sales,customer_activity,performance
+    parameters: json
+    generated_at: datetime
+    timestamps: true
+    softDeletes: true
+
+  MarketingCampaign:
+    title: string:255
+    description: text nullable
+    start_date: date
+    end_date: date
+    target_audience: enum:all,segment_a,segment_b
+    status: enum:planned,running,completed,canceled
+    budget: decimal:15,2 nullable
+    timestamps: true
+    softDeletes: true
+
+  SupportTicket:
+    customer_id: id
+    title: string:255
+    description: text nullable
+    status: enum:open,closed,pending,resolved
+    user_id: id
+    priority: enum:low,medium,high
+    timestamps: true
+    softDeletes: true
